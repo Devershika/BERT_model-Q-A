@@ -43,6 +43,3 @@ This project fine-tunes a DistilBERT model for extractive Question Answering (QA
   * Load model with Hugging Face pipeline("question-answering").
 
   * Provide a question and context to get an extracted answer.
-Load model with Hugging Face pipeline("question-answering").
-
-Provide a question and context to get an extracted answer.
