@@ -68,4 +68,35 @@ tokenizer_squad = squad.map(preprocess_function,
                             remove_columns=squad["train"].column_names)
 
 data_collator = DefaultDataCollator()
+model = AutoModelForQuestionAnswering.from_pretrained("distilbert/distilbert-base-uncased")
 
+training_args = TrainingArguments(
+    output_dir = "qa_model",
+    eval_strategy="epoch",
+    learning_rate=2e-5,
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
+    num_train_epochs=3,
+    weight_decay=0.01,
+    report_to="none"
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenizer_squad["train"],
+    eval_dataset=tokenizer_squad["test"],
+    processing_class=tokenizer,
+    data_collator=data_collator
+)
+
+trainer.train()
+
+trainer.save_model("qa_model")
+tokenizer.save_pretrained("qa_model")
+
+question = ""
+context = ""
+question_answerer = pipeline("question-answering", model="qa_model")
+
+question_answerer(question=question, context=context)
